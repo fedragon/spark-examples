@@ -7,7 +7,8 @@ Experiments with [Apache Spark](http://spark.apache.org).
 ### Download StackOverflow's users file
 
 - Download `stackoverflow.com-Users.7z` from [Stack Exchange Data Dump](https://archive.org/details/stackexchange);
-- uncompress it to `/tmp/spark`.
+- Download `stackoverflow.com-Badges.7z` from [Stack Exchange Data Dump](https://archive.org/details/stackexchange);
+- uncompress them to `/tmp/spark`.
 
 ### Clone this project and package it with sbt-assembly
 
