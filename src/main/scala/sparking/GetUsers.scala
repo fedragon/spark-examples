@@ -1,8 +1,10 @@
 package sparking
 
+import com.esotericsoftware.kryo.Kryo
 import org.apache.spark.rdd.RDD
-import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.SparkContext._
+import org.apache.spark.serializer.KryoRegistrator
+import org.apache.spark.SparkConf
+import org.apache.spark.SparkContext, SparkContext._
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.{Days, LocalDate}
 
@@ -34,6 +36,13 @@ object User {
   }
 }
 
+class MyKryoRegistrator extends KryoRegistrator {
+  override def registerClasses(kryo: Kryo) {
+    kryo.register(classOf[Badge])
+    kryo.register(classOf[User])
+  }
+}
+
 object GetUsersWithBadges {
 
   type Reputation = Int
@@ -42,7 +51,10 @@ object GetUsersWithBadges {
     val badgesInputPath = "/tmp/spark/Badges.xml"
     val usersInputPath = "/tmp/spark/Users.xml"
 
-    val sc: SparkContext = new SparkContext(new SparkConf())
+    val conf = new SparkConf()
+    conf.set("spark.kryo.registrator", "sparking.MyKryoRegistrator")
+    conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    val sc: SparkContext = new SparkContext(conf)
 
     val badges = sc.textFile(badgesInputPath)
       .flatMap(Badge.fromRow)
