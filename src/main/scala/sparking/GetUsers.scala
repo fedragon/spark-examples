@@ -52,6 +52,10 @@ object GetUsersWithBadges {
     conf.set("spark.kryo.registrator", "sparking.MyKryoRegistrator")
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     conf.set("spark.rdd.compress", "true")
+
+    // Log effective configuration when application starts
+    conf.set("spark.logConf", "true")
+
     val sc: SparkContext = new SparkContext(conf)
 
     val badges = sc.textFile(badgesInputPath)
