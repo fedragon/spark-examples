@@ -44,9 +44,6 @@ class MyKryoRegistrator extends KryoRegistrator {
 }
 
 object GetUsersWithBadges {
-
-  type Reputation = Int
-
   def main(args: Array[String]) {
     val badgesInputPath = "/tmp/spark/Badges.xml"
     val usersInputPath = "/tmp/spark/Users.xml"
@@ -54,6 +51,7 @@ object GetUsersWithBadges {
     val conf = new SparkConf()
     conf.set("spark.kryo.registrator", "sparking.MyKryoRegistrator")
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    conf.set("spark.rdd.compress", "true")
     val sc: SparkContext = new SparkContext(conf)
 
     val badges = sc.textFile(badgesInputPath)
@@ -68,8 +66,7 @@ object GetUsersWithBadges {
     val usersWithBadges = users.leftOuterJoin(badges).map {
       case (_, (user, Some(badges))) => user.copy(badges = badges.toSeq.distinct)
       case (_, (user, _)) => user
-    }.keyBy(_.badges.size)
-      .sortByKey(ascending = false)
+    }.keyBy(_.badges.size).sortByKey(ascending = false)
 
     usersWithBadges.take(10).foreach {
       case (n, u) =>
