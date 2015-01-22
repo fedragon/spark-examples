@@ -1,4 +1,4 @@
-#/usr/bin/sh
+#!/bin/bash
 
 cd ~/Downloads
 mkdir -p /tmp/spark
