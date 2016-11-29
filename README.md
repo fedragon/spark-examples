@@ -4,18 +4,21 @@ Experiments with [Apache Spark](http://spark.apache.org).
 
 ## Prerequisites
 
+### Install Spark
+
+    brew install apache-spark
+    /usr/local/Cellar/apache-spark/2.0.2/libexec/sbin/start-all.sh
+
 ### Download StackOverflow's users file
 
 - Download `stackoverflow.com-Users.7z` from [Stack Exchange Data Dump](https://archive.org/details/stackexchange);
 - Download `stackoverflow.com-Badges.7z` from [Stack Exchange Data Dump](https://archive.org/details/stackexchange);
-- uncompress them to `/tmp/spark`.
+- run `./prepare-input.sh`
 
-### Clone this project and package it with sbt-assembly
+### Build
 
-  git clone https://github.com/fedragon/spark-examples
-  cd spark-examples
-  sbt assembly
+    sbt assembly
 
-### Run it
+### Run
 
-  <your_spark_home>/bin/spark-submit --master spark://<master>:<port> --class sparking.GetUsers <spark_examples_folder>/target/scala-2.10/spark-examples-assembly-1.0.0.jar
+    spark-submit --master spark://<master>:<port> --class sparking.GetUsers target/scala-2.10/spark-examples-assembly-1.0.0.jar
